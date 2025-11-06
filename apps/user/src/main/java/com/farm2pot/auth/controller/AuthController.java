@@ -36,7 +36,7 @@ public class AuthController {
     // 로그인
     @PostMapping("/login")
     public ResponseMessage<LoginTokenResponse> login(
-            @RequestBody @Validated LoginRequest loginRequest, HttpServletResponse response
+            @RequestBody LoginRequest loginRequest, HttpServletResponse response
     ) {
         LoginTokenResponse loginResponse = authService.login(loginRequest, response);
         return ResponseMessage.success("login success", loginResponse);

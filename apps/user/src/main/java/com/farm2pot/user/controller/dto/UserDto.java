@@ -1,6 +1,6 @@
 package com.farm2pot.user.controller.dto;
 
-import com.farm2pot.address.controller.dto.AddressDto;
+import com.farm2pot.address.controller.dto.AddressData;
 import lombok.*;
 
 import java.util.Date;
@@ -31,5 +31,5 @@ public class UserDto {
     private String gender;
     private String nickName;
     private List<String> roles;
-    private List<AddressDto> userAddress;
+    private List<AddressData> userAddress;
 }

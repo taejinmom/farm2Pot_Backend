@@ -4,7 +4,7 @@ import com.farm2pot.address.entity.Address;
 import com.farm2pot.address.mapper.AddressMapper;
 import com.farm2pot.common.exception.UserErrorCode;
 import com.farm2pot.common.exception.UserException;
-import com.farm2pot.address.controller.dto.AddressDto;
+import com.farm2pot.address.controller.dto.AddressData;
 import com.farm2pot.user.entity.User;
 import com.farm2pot.address.repository.AddressRepository;
 import com.farm2pot.user.repository.UserRepository;
@@ -51,17 +51,17 @@ public class AddressService {
 
     /**
      * 사용자 배송지 추가
-     * @param addressDto
+     * @param addressData
      */
-    public void addUserAddress(AddressDto addressDto) {
-        Long userId = addressDto.getUserId();
+    public void addUserAddress(AddressData addressData) {
+        Long userId = addressData.getUserId();
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserException(UserErrorCode.USER_NOT_FOUND)
         );
         //DTO에 UserEntity 세팅
-        addressDto.setUser(user);
+        addressData.setUser(user);
         //UserAddress Insert
-        addressRepository.save(userAddressMapper.toEntity(addressDto));
+        addressRepository.save(userAddressMapper.toEntity(addressData));
 
     }
 

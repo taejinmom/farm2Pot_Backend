@@ -1,7 +1,7 @@
 package com.farm2pot.address.controller;
 
+import com.farm2pot.address.controller.dto.AddressData;
 import com.farm2pot.address.entity.Address;
-import com.farm2pot.address.controller.dto.AddressDto;
 import com.farm2pot.common.response.ResponseMessage;
 import com.farm2pot.address.service.AddressService;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +36,13 @@ public class AddressController {
 
     /**
      * 사용자 배송지 추가
-     * @param addressDto
+     * @param addressData
      * @return
      */
     @PostMapping("/address")
-    public ResponseMessage<String> addUserAddress(@RequestBody AddressDto addressDto) {
+    public ResponseMessage<String> addUserAddress(@RequestBody AddressData addressData) {
         try{
-            addressService.addUserAddress(addressDto);
+            addressService.addUserAddress(addressData);
             return ResponseMessage.success("Insert UserAddress.... Success");
         }catch (Exception e) {
             e.printStackTrace();
@@ -53,11 +53,11 @@ public class AddressController {
     /**
      * 사용자의 배송지 목록 중 특정 배송지 하나를 수정
      * @param addrId
-     * @param addressDto
+     * @param addressData
      * @return
      */
     @PutMapping("/address/{addrId}")
-    public ResponseMessage<Address> editAddress(@PathVariable("addrId") Long addrId, @RequestBody AddressDto addressDto) {
+    public ResponseMessage<Address> editAddress(@PathVariable("addrId") Long addrId, @RequestBody AddressData addressData) {
         return ResponseMessage.success("Select UserAddress By UserId", addressService.findUserAddressById(addrId));
     }
 

@@ -1,6 +1,9 @@
 package com.farm2pot.user.controller.dto;
 
-public class LoginRequest extends UserDto{
-    private String loginId;
-    private String password;
-}
+import lombok.Builder;
+
+@Builder(toBuilder = true)
+public record LoginRequest (
+    String loginId,
+    String password
+){}

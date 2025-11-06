@@ -104,13 +104,13 @@ public class UserService {
     }
 
     /**
-     *
+     * 사용자 패스워드 체크
      * @param userPasswordCheckDto
      * @return
      */
     public boolean checkUser(UserPasswordCheckDto userPasswordCheckDto) {
-        User user = userRepository.findById(userPasswordCheckDto.getId()).orElseThrow(() -> new UserException(UserErrorCode.UNAUTHORIZED_USER));
-        return validatePassword(user.getPassword(), userPasswordCheckDto.getPassword());
+        User user = userRepository.findById(userPasswordCheckDto.id()).orElseThrow(() -> new UserException(UserErrorCode.UNAUTHORIZED_USER));
+        return validatePassword(user.getPassword(), userPasswordCheckDto.password());
     }
 }
 

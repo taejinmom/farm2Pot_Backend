@@ -4,21 +4,9 @@ import lombok.*;
 
 import java.time.Instant;
 
-/**
- * packageName    : com.farm2pot.user.dto
- * author         : TAEJIN
- * date           : 2025-10-13
- * description    :
- */
-
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class TokenRefresh {
-    private Long id;
-    private String token;
-    private Long userId;
-    private Instant expiryDate;
-}
+public record TokenRefresh(
+        Long id,
+        String token,
+        Long userId,
+        Instant expiryDate
+) {}

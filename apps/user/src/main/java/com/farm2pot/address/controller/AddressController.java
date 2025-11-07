@@ -4,6 +4,7 @@ import com.farm2pot.address.controller.dto.AddressData;
 import com.farm2pot.address.entity.Address;
 import com.farm2pot.common.response.ResponseMessage;
 import com.farm2pot.address.service.AddressService;
+import com.farm2pot.user.service.dto.UserWithDefaultAddressDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,6 +60,16 @@ public class AddressController {
     @PutMapping("/address/{addrId}")
     public ResponseMessage<Address> editAddress(@PathVariable("addrId") Long addrId, @RequestBody AddressData addressData) {
         return ResponseMessage.success("Select UserAddress By UserId", addressService.findUserAddressById(addrId));
+    }
+
+    /**
+     * 사용자의 UserId로 사용자의 기본 배송지 조회
+     * @param userId
+     * @return
+     */
+    @GetMapping("/address/default/{userId}")
+    public ResponseMessage<UserWithDefaultAddressDto> findDefaultAddress(@PathVariable("userId") Long userId) {
+        return ResponseMessage.success("Select Default Address By UserId", addressService.getUserWithDefaultAddress(userId));
     }
 
     /**

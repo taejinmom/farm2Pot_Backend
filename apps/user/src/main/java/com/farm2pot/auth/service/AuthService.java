@@ -122,17 +122,15 @@ public class AuthService {
     @Transactional
     public void register(CreateUserRequest createUserRequest){
         //1. 사용자정보 Insert
-        String newPassword = passwordEncoder.encode(createUserRequest.password());
-        createUserRequest.toBuilder().password(newPassword).build();
-
-        User user = createUserMapper.toEntity(createUserRequest);
+        User user = createUserMapper.toEntity(
+                createUserRequest.toBuilder()
+                        .password(passwordEncoder.encode(createUserRequest.password()))
+                        .build()
+        );
         userRepository.save(user);
 
         //2. 주소정보 Insert
-        AddressData addressData = getUserAddress(createUserRequest, user);
-        Address address = userAddressMapper.toEntity(addressData);
-//        address.setUser(user);
-        addressRepository.save(address);
+        addressRepository.save(userAddressMapper.toEntity(getUserAddress(createUserRequest, user)));
     }
 
     // 전체 사용자 조회
@@ -165,8 +163,10 @@ public class AuthService {
      */
     public AddressData getUserAddress(CreateUserRequest createUserRequest, User user) {
         AddressData addressData = createUserRequest.addressData();
-        addressData.toBuilder().isDefault(true).user(user).build();
-        return addressData;
+        return addressData.toBuilder()
+                .isDefault(true)
+                .user(user)
+                .build();
     }
 
 //    @PostConstruct

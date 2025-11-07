@@ -8,6 +8,7 @@ import com.farm2pot.address.controller.dto.AddressData;
 import com.farm2pot.user.entity.User;
 import com.farm2pot.address.repository.AddressRepository;
 import com.farm2pot.user.repository.UserRepository;
+import com.farm2pot.user.service.dto.UserWithDefaultAddressDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class AddressService {
 
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
-    private final AddressMapper userAddressMapper;
+    private final AddressMapper addressMapper;
 
     /**
      * USERADDRESS pk로 배송지 찾기
@@ -36,7 +37,7 @@ public class AddressService {
      * @return
      */
     public Address findUserAddressById(Long id) {
-        return addressRepository.findById(id).orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_ADDRESS));
+        return addressRepository.findById(id).orElseThrow(() -> new UserException(UserErrorCode.ADDRESS_NOT_FOUND));
     }
 
     /**
@@ -45,7 +46,7 @@ public class AddressService {
      * @return
      */
     public List<Address> findAllAddressByUserId(Long userId) {
-        return addressRepository.findAllAddressByUserId(userId).orElseThrow(() -> new UserException(UserErrorCode.NOT_FOUND_ADDRESS));
+        return addressRepository.findAllAddressByUserId(userId).orElseThrow(() -> new UserException(UserErrorCode.ADDRESS_NOT_FOUND));
     }
 
 
@@ -54,14 +55,16 @@ public class AddressService {
      * @param addressData
      */
     public void addUserAddress(AddressData addressData) {
-        Long userId = addressData.getUserId();
+        Long userId = addressData.userId();
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserException(UserErrorCode.USER_NOT_FOUND)
         );
         //DTO에 UserEntity 세팅
-        addressData.setUser(user);
-        //UserAddress Insert
-        addressRepository.save(userAddressMapper.toEntity(addressData));
+        AddressData updatedData = addressData.toBuilder()
+                .user(user)
+                .build();
+        //Address Insert
+        addressRepository.save(addressMapper.toEntity(updatedData));
 
     }
 
@@ -71,5 +74,24 @@ public class AddressService {
      */
     public void deleteUserAddressByUserId(Long UserId) {
         addressRepository.deleteByUserId(UserId);
+    }
+
+    /**
+     * userId로 user + 기본 주소 함께 조회
+     */
+    public UserWithDefaultAddressDto getUserWithDefaultAddress(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+        Address address = user.getDefaultAddress();
+
+        return new UserWithDefaultAddressDto(
+                user.getId(),
+                user.getLoginId(),
+                address.getRecipientName(),
+                address.getAddressLine1(),
+                address.getAddressLine2(),
+                address.getPhoneNumber(),
+                address
+        );
     }
 }

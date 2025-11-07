@@ -23,6 +23,12 @@ bin/
 *.iml
 *.ipr
 out/
+apps/user/out/
+apps/admin/out/
+apps/subscription/out/
+apps/gateway/out/
+apps/core/out/
+
 !**/src/main/**/out/
 !**/src/test/**/out/
 

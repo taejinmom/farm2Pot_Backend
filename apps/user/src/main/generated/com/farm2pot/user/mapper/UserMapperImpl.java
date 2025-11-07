@@ -9,100 +9,100 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-11-03T19:12:27+0900",
+    date = "2025-11-06T21:47:42+0900",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.8 (Microsoft)"
 )
 @Component
 public class UserMapperImpl implements UserMapper {
 
     @Override
-    public User toEntity(UserDto dto) {
-        if ( dto == null ) {
+    public User toEntity(UserDto arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
         User.UserBuilder user = User.builder();
 
-        if ( dto.getLoginId() != null ) {
-            user.loginId( dto.getLoginId() );
+        if ( arg0.getLoginId() != null ) {
+            user.loginId( arg0.getLoginId() );
         }
-        if ( dto.getEmail() != null ) {
-            user.email( dto.getEmail() );
+        if ( arg0.getEmail() != null ) {
+            user.email( arg0.getEmail() );
         }
-        if ( dto.getPassword() != null ) {
-            user.password( dto.getPassword() );
+        if ( arg0.getPassword() != null ) {
+            user.password( arg0.getPassword() );
         }
-        if ( dto.getName() != null ) {
-            user.name( dto.getName() );
+        if ( arg0.getName() != null ) {
+            user.name( arg0.getName() );
         }
-        if ( dto.getLoginType() != null ) {
-            user.loginType( dto.getLoginType() );
+        if ( arg0.getLoginType() != null ) {
+            user.loginType( arg0.getLoginType() );
         }
-        if ( dto.getPhoneNo() != null ) {
-            user.phoneNo( dto.getPhoneNo() );
+        if ( arg0.getPhoneNo() != null ) {
+            user.phoneNo( arg0.getPhoneNo() );
         }
-        if ( dto.getBirthDay() != null ) {
-            user.birthDay( dto.getBirthDay() );
+        if ( arg0.getBirthDay() != null ) {
+            user.birthDay( arg0.getBirthDay() );
         }
-        user.status( dto.getStatus() );
-        if ( dto.getGender() != null ) {
-            user.gender( dto.getGender() );
+        user.status( arg0.getStatus() );
+        if ( arg0.getGender() != null ) {
+            user.gender( arg0.getGender() );
         }
-        if ( dto.getNickName() != null ) {
-            user.nickName( dto.getNickName() );
+        if ( arg0.getNickName() != null ) {
+            user.nickName( arg0.getNickName() );
         }
-        List<String> list = dto.getRoles();
+        List<String> list = arg0.getRoles();
         if ( list != null ) {
             user.roles( new ArrayList<String>( list ) );
         }
 
         User userResult = user.build();
 
-        afterUpdate( dto, userResult );
+        afterUpdate( arg0, userResult );
 
         return userResult;
     }
 
     @Override
-    public UserDto toDto(User entity) {
-        if ( entity == null ) {
+    public UserDto toDto(User arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
         UserDto.UserDtoBuilder userDto = UserDto.builder();
 
-        if ( entity.getId() != null ) {
-            userDto.id( entity.getId() );
+        if ( arg0.getId() != null ) {
+            userDto.id( arg0.getId() );
         }
-        if ( entity.getLoginId() != null ) {
-            userDto.loginId( entity.getLoginId() );
+        if ( arg0.getLoginId() != null ) {
+            userDto.loginId( arg0.getLoginId() );
         }
-        if ( entity.getEmail() != null ) {
-            userDto.email( entity.getEmail() );
+        if ( arg0.getEmail() != null ) {
+            userDto.email( arg0.getEmail() );
         }
-        if ( entity.getPassword() != null ) {
-            userDto.password( entity.getPassword() );
+        if ( arg0.getPassword() != null ) {
+            userDto.password( arg0.getPassword() );
         }
-        if ( entity.getName() != null ) {
-            userDto.name( entity.getName() );
+        if ( arg0.getName() != null ) {
+            userDto.name( arg0.getName() );
         }
-        if ( entity.getLoginType() != null ) {
-            userDto.loginType( entity.getLoginType() );
+        if ( arg0.getLoginType() != null ) {
+            userDto.loginType( arg0.getLoginType() );
         }
-        if ( entity.getPhoneNo() != null ) {
-            userDto.phoneNo( entity.getPhoneNo() );
+        if ( arg0.getPhoneNo() != null ) {
+            userDto.phoneNo( arg0.getPhoneNo() );
         }
-        if ( entity.getBirthDay() != null ) {
-            userDto.birthDay( entity.getBirthDay() );
+        if ( arg0.getBirthDay() != null ) {
+            userDto.birthDay( arg0.getBirthDay() );
         }
-        userDto.status( entity.getStatus() );
-        if ( entity.getGender() != null ) {
-            userDto.gender( entity.getGender() );
+        userDto.status( arg0.getStatus() );
+        if ( arg0.getGender() != null ) {
+            userDto.gender( arg0.getGender() );
         }
-        if ( entity.getNickName() != null ) {
-            userDto.nickName( entity.getNickName() );
+        if ( arg0.getNickName() != null ) {
+            userDto.nickName( arg0.getNickName() );
         }
-        List<String> list = entity.getRoles();
+        List<String> list = arg0.getRoles();
         if ( list != null ) {
             userDto.roles( new ArrayList<String>( list ) );
         }

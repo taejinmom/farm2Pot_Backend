@@ -1,5 +1,7 @@
 package com.farm2pot.user.service;
 
+import com.farm2pot.address.entity.Address;
+import com.farm2pot.address.repository.AddressRepository;
 import com.farm2pot.address.service.AddressService;
 import com.farm2pot.auth.repository.RefreshTokenRepository;
 import com.farm2pot.common.exception.UserErrorCode;
@@ -10,6 +12,7 @@ import com.farm2pot.user.service.dto.UserPasswordCheckDto;
 import com.farm2pot.user.entity.User;
 import com.farm2pot.user.mapper.UserMapper;
 import com.farm2pot.user.repository.UserRepository;
+import com.farm2pot.user.service.dto.UserWithDefaultAddressDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,7 +35,7 @@ import static com.farm2pot.common.exception.UserErrorCode.USER_NOT_FOUND;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final AddressService addressService;
+    private final AddressRepository addressRepository;
     private final CommonService commonService;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserMapper userMapper;
@@ -60,6 +63,8 @@ public class UserService {
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UserException(USER_NOT_FOUND));
     }
+
+
 
     /**
      * 사용자 정보 수정 (프로필 수정)

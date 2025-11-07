@@ -1,123 +1,123 @@
 package com.farm2pot.address.mapper;
 
-import com.farm2pot.address.controller.dto.AddressDto;
+import com.farm2pot.address.controller.dto.AddressData;
 import com.farm2pot.address.entity.Address;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-11-03T19:12:27+0900",
+    date = "2025-11-06T21:47:42+0900",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.8 (Microsoft)"
 )
 @Component
 public class AddressMapperImpl implements AddressMapper {
 
     @Override
-    public Address toEntity(AddressDto dto) {
-        if ( dto == null ) {
+    public Address toEntity(AddressData arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
         Address.AddressBuilder address = Address.builder();
 
-        if ( dto.getUser() != null ) {
-            address.user( dto.getUser() );
+        if ( arg0.user() != null ) {
+            address.user( arg0.user() );
         }
-        if ( dto.getRecipientName() != null ) {
-            address.recipientName( dto.getRecipientName() );
+        if ( arg0.recipientName() != null ) {
+            address.recipientName( arg0.recipientName() );
         }
-        if ( dto.getPhoneNumber() != null ) {
-            address.phoneNumber( dto.getPhoneNumber() );
+        if ( arg0.phoneNumber() != null ) {
+            address.phoneNumber( arg0.phoneNumber() );
         }
-        if ( dto.getPostalCode() != null ) {
-            address.postalCode( dto.getPostalCode() );
+        if ( arg0.postalCode() != null ) {
+            address.postalCode( arg0.postalCode() );
         }
-        if ( dto.getAddressLine1() != null ) {
-            address.addressLine1( dto.getAddressLine1() );
+        if ( arg0.addressLine1() != null ) {
+            address.addressLine1( arg0.addressLine1() );
         }
-        if ( dto.getAddressLine2() != null ) {
-            address.addressLine2( dto.getAddressLine2() );
+        if ( arg0.addressLine2() != null ) {
+            address.addressLine2( arg0.addressLine2() );
         }
-        if ( dto.getCreatedAt() != null ) {
-            address.createdAt( dto.getCreatedAt() );
+        address.isDefault( arg0.isDefault() );
+        if ( arg0.createdAt() != null ) {
+            address.createdAt( arg0.createdAt() );
         }
-        if ( dto.getUpdatedAt() != null ) {
-            address.updatedAt( dto.getUpdatedAt() );
+        if ( arg0.updatedAt() != null ) {
+            address.updatedAt( arg0.updatedAt() );
         }
 
         return address.build();
     }
 
     @Override
-    public AddressDto toDto(Address entity) {
-        if ( entity == null ) {
+    public AddressData toDto(Address arg0) {
+        if ( arg0 == null ) {
             return null;
         }
 
-        AddressDto.AddressDtoBuilder addressDto = AddressDto.builder();
+        AddressData.AddressDataBuilder addressData = AddressData.builder();
 
-        if ( entity.getId() != null ) {
-            addressDto.id( entity.getId() );
+        if ( arg0.getId() != null ) {
+            addressData.id( arg0.getId() );
         }
-        if ( entity.getUser() != null ) {
-            addressDto.user( entity.getUser() );
+        if ( arg0.getUser() != null ) {
+            addressData.user( arg0.getUser() );
         }
-        if ( entity.getRecipientName() != null ) {
-            addressDto.recipientName( entity.getRecipientName() );
+        if ( arg0.getRecipientName() != null ) {
+            addressData.recipientName( arg0.getRecipientName() );
         }
-        if ( entity.getPhoneNumber() != null ) {
-            addressDto.phoneNumber( entity.getPhoneNumber() );
+        if ( arg0.getPhoneNumber() != null ) {
+            addressData.phoneNumber( arg0.getPhoneNumber() );
         }
-        if ( entity.getPostalCode() != null ) {
-            addressDto.postalCode( entity.getPostalCode() );
+        if ( arg0.getPostalCode() != null ) {
+            addressData.postalCode( arg0.getPostalCode() );
         }
-        if ( entity.getAddressLine1() != null ) {
-            addressDto.addressLine1( entity.getAddressLine1() );
+        if ( arg0.getAddressLine1() != null ) {
+            addressData.addressLine1( arg0.getAddressLine1() );
         }
-        if ( entity.getAddressLine2() != null ) {
-            addressDto.addressLine2( entity.getAddressLine2() );
+        if ( arg0.getAddressLine2() != null ) {
+            addressData.addressLine2( arg0.getAddressLine2() );
         }
-        if ( entity.getCreatedAt() != null ) {
-            addressDto.createdAt( entity.getCreatedAt() );
+        if ( arg0.getCreatedAt() != null ) {
+            addressData.createdAt( arg0.getCreatedAt() );
         }
-        if ( entity.getUpdatedAt() != null ) {
-            addressDto.updatedAt( entity.getUpdatedAt() );
+        if ( arg0.getUpdatedAt() != null ) {
+            addressData.updatedAt( arg0.getUpdatedAt() );
         }
 
-        return addressDto.build();
+        return addressData.build();
     }
 
     @Override
-    public void updateEntityFromDto(AddressDto dto, Address entity) {
+    public void updateEntityFromDto(AddressData dto, Address entity) {
         if ( dto == null ) {
             return;
         }
 
-        if ( dto.getUser() != null ) {
-            entity.setUser( dto.getUser() );
+        if ( dto.user() != null ) {
+            entity.setUser( dto.user() );
         }
-        if ( dto.getRecipientName() != null ) {
-            entity.setRecipientName( dto.getRecipientName() );
+        if ( dto.recipientName() != null ) {
+            entity.setRecipientName( dto.recipientName() );
         }
-        if ( dto.getPhoneNumber() != null ) {
-            entity.setPhoneNumber( dto.getPhoneNumber() );
+        if ( dto.phoneNumber() != null ) {
+            entity.setPhoneNumber( dto.phoneNumber() );
         }
-        if ( dto.getPostalCode() != null ) {
-            entity.setPostalCode( dto.getPostalCode() );
+        if ( dto.postalCode() != null ) {
+            entity.setPostalCode( dto.postalCode() );
         }
-        if ( dto.getAddressLine1() != null ) {
-            entity.setAddressLine1( dto.getAddressLine1() );
+        if ( dto.addressLine1() != null ) {
+            entity.setAddressLine1( dto.addressLine1() );
         }
-        if ( dto.getAddressLine2() != null ) {
-            entity.setAddressLine2( dto.getAddressLine2() );
+        if ( dto.addressLine2() != null ) {
+            entity.setAddressLine2( dto.addressLine2() );
         }
-        entity.setDefault( dto.isDefault() );
-        if ( dto.getCreatedAt() != null ) {
-            entity.setCreatedAt( dto.getCreatedAt() );
+        if ( dto.createdAt() != null ) {
+            entity.setCreatedAt( dto.createdAt() );
         }
-        if ( dto.getUpdatedAt() != null ) {
-            entity.setUpdatedAt( dto.getUpdatedAt() );
+        if ( dto.updatedAt() != null ) {
+            entity.setUpdatedAt( dto.updatedAt() );
         }
     }
 }

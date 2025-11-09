@@ -2,7 +2,7 @@ package com.farm2pot.user.mapper;
 
 import com.farm2pot.common.config.MapStructConfig;
 import com.farm2pot.common.mapper.BaseMapper;
-import com.farm2pot.user.controller.dto.UserResponse;
+import com.farm2pot.user.controller.dto.EditUserRequest;
 import com.farm2pot.user.entity.User;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -16,15 +16,15 @@ import org.mapstruct.MappingTarget;
  * description    :
  */
 @Mapper(config = MapStructConfig.class)
-public interface UserMapper extends BaseMapper<User, UserResponse> {
+public interface EditUserMapper extends BaseMapper<User, EditUserRequest> {
 
     @Override
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "roles", ignore = true)
-    void updateEntityFromDto(UserResponse dto, @MappingTarget User entity);
+    void updateEntityFromDto(EditUserRequest dto, @MappingTarget User entity);
 
     @AfterMapping
-    default void afterUpdate(UserResponse dto, @MappingTarget User entity) {
+    default void afterUpdate(EditUserRequest dto, @MappingTarget User entity) {
         if (dto.roles() != null) {
             entity.getRoles().clear();
             entity.getRoles().addAll(dto.roles());

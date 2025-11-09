@@ -1,14 +1,15 @@
 package com.farm2pot.address.service;
 
+import com.farm2pot.address.controller.dto.AddressData;
 import com.farm2pot.address.entity.Address;
 import com.farm2pot.address.mapper.AddressMapper;
-import com.farm2pot.common.exception.UserErrorCode;
-import com.farm2pot.common.exception.UserException;
-import com.farm2pot.address.controller.dto.AddressData;
-import com.farm2pot.user.entity.User;
+import com.farm2pot.address.mapper.DefaultAddressMapper;
 import com.farm2pot.address.repository.AddressRepository;
+import com.farm2pot.address.service.dto.DefaultAddressResponse;
+import com.farm2pot.common.exception.BaseException;
+import com.farm2pot.common.exception.UserErrorCode;
+import com.farm2pot.user.entity.User;
 import com.farm2pot.user.repository.UserRepository;
-import com.farm2pot.user.service.dto.UserWithDefaultAddressDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class AddressService {
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
     private final AddressMapper addressMapper;
+    private final DefaultAddressMapper defaultAddressMapper;
 
     /**
      * USERADDRESS pk로 배송지 찾기
@@ -37,7 +39,7 @@ public class AddressService {
      * @return
      */
     public Address findUserAddressById(Long id) {
-        return addressRepository.findById(id).orElseThrow(() -> new UserException(UserErrorCode.ADDRESS_NOT_FOUND));
+        return addressRepository.findById(id).orElseThrow(() -> new BaseException(UserErrorCode.ADDRESS_NOT_FOUND));
     }
 
     /**
@@ -46,7 +48,7 @@ public class AddressService {
      * @return
      */
     public List<Address> findAllAddressByUserId(Long userId) {
-        return addressRepository.findAllAddressByUserId(userId).orElseThrow(() -> new UserException(UserErrorCode.ADDRESS_NOT_FOUND));
+        return addressRepository.findAllAddressByUserId(userId).orElseThrow(() -> new BaseException(UserErrorCode.ADDRESS_NOT_FOUND));
     }
 
 
@@ -54,10 +56,10 @@ public class AddressService {
      * 사용자 배송지 추가
      * @param addressData
      */
-    public void addUserAddress(AddressData addressData) {
+    public AddressData addUserAddress(AddressData addressData) {
         Long userId = addressData.userId();
         User user = userRepository.findById(userId).orElseThrow(
-                () -> new UserException(UserErrorCode.USER_NOT_FOUND)
+                () -> new BaseException(UserErrorCode.USER_NOT_FOUND)
         );
         //DTO에 UserEntity 세팅
         AddressData updatedData = addressData.toBuilder()
@@ -65,8 +67,19 @@ public class AddressService {
                 .build();
         //Address Insert
         addressRepository.save(addressMapper.toEntity(updatedData));
-
+        return updatedData;
     }
+
+    /**
+     *
+     * @param addrId
+     * @param addressData
+     */
+    public AddressData editUserAddress(Long addrId, AddressData addressData) {
+
+        return null;
+    }
+
 
     /**
      * 사용자ID로 사용자의 배송지 모두 제거
@@ -79,19 +92,20 @@ public class AddressService {
     /**
      * userId로 user + 기본 주소 함께 조회
      */
-    public UserWithDefaultAddressDto getUserWithDefaultAddress(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
-        Address address = user.getDefaultAddress();
+    public User getUserWithDefaultAddress(Long userId) {
+        User user = userRepository.findUserWithAddresses(userId)
+                .orElseThrow(() -> new BaseException(UserErrorCode.USER_NOT_FOUND));
+        return user;
+    }
 
-        return new UserWithDefaultAddressDto(
-                user.getId(),
-                user.getLoginId(),
-                address.getRecipientName(),
-                address.getAddressLine1(),
-                address.getAddressLine2(),
-                address.getPhoneNumber(),
-                address
-        );
+    /**
+     * userId로 기본 주소 함께 조회
+     */
+    public DefaultAddressResponse findByUserIdAndIsDefaultTrue(Long userId) {
+        Address address = addressRepository.findByUserIdAndIsDefaultTrue(userId)
+                .orElseThrow(()-> new BaseException(UserErrorCode.ADDRESSS_NOT_FOUND_DEFAULT));
+
+        return defaultAddressMapper.toDto(address);
+
     }
 }

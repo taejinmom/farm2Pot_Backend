@@ -3,8 +3,7 @@ package com.farm2pot.auth.controller;
 import com.farm2pot.auth.controller.dto.TokenRefresh;
 import com.farm2pot.auth.controller.dto.CreateUserRequest;
 import com.farm2pot.auth.service.AuthService;
-import com.farm2pot.common.response.ResponseMessage;
-import com.farm2pot.user.controller.dto.LoginRequest;
+import com.farm2pot.auth.controller.dto.LoginRequest;
 import com.farm2pot.auth.service.dto.LoginTokenResponse;
 import com.farm2pot.user.entity.User;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,31 +28,28 @@ public class AuthController {
 
     // 토큰 재발급
     @PostMapping("/refresh")
-    public ResponseMessage<LoginTokenResponse> refresh(@RequestBody TokenRefresh request) {
-        return ResponseMessage.success("token refresh ..... success", authService.refresh(request));
+    public LoginTokenResponse refresh(@RequestBody TokenRefresh request) {
+        return authService.refresh(request);
     }
 
     // 로그인
     @PostMapping("/login")
-    public ResponseMessage<LoginTokenResponse> login(
+    public LoginTokenResponse login(
             @RequestBody LoginRequest loginRequest, HttpServletResponse response
     ) {
         LoginTokenResponse loginResponse = authService.login(loginRequest, response);
-        return ResponseMessage.success("login success", loginResponse);
+        return loginResponse;
     }
 
     // 회원가입
     @PostMapping("/register")
-    public ResponseMessage<String> register(
-            @RequestBody @Validated CreateUserRequest userDto // TODO : -> 회원가입용 requestDTO 추가해야 함.
-    ) {
+    public void register( @RequestBody @Validated CreateUserRequest userDto ) {
         authService.register(userDto); // 실제 회원가입 처리
-        return ResponseMessage.success("join success", "");
     }
 
     @GetMapping("/users")
-    public ResponseMessage<List<User>> getAllUsers() {
-        return ResponseMessage.success("select All Users" , authService.getAllUsers());
+    public List<User> getAllUsers() {
+        return authService.getAllUsers();
     }
 
 }

@@ -1,8 +1,6 @@
 package com.farm2pot.user.entity;
 
 import com.farm2pot.address.entity.Address;
-import com.farm2pot.common.exception.UserErrorCode;
-import com.farm2pot.common.exception.UserException;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * packageName    : com.farm2pot.auth.entity
@@ -25,10 +22,9 @@ import java.util.Optional;
 @Entity
 @Table(name = "user")  // DB 테이블명
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 public class User implements Serializable {
     private static final long serialVersionUID = 174726374856727L;
 
@@ -66,15 +62,13 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
     )
-    @Builder.Default
     @Column(name = "roles")
     private List<String> roles = new ArrayList<>();      // 권한 (ROLE_USER, ROLE_ADMIN 등)
 
     // 1:N 매핑
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    @JsonManagedReference  // 직렬화 주인
-    private List<Address> addresses = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+//    @JsonManagedReference
+    private List<Address> addresses;
 
     @CreationTimestamp // insert 시 자동으로 생성
     @Column(name = "created_at", updatable = false)
@@ -84,11 +78,11 @@ public class User implements Serializable {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // ✅ 기본 주소를 바로 가져올 수 있는 편의 메서드
-    public Address getDefaultAddress() {
-        return this.addresses.stream()
-                .filter(Address::isDefault)
-                .findFirst()
-                .orElseThrow(() -> new UserException(UserErrorCode.ADDRESSS_NOT_FOUND_DEFAULT));
-    }
+//    // 기본 주소를 바로 가져올 수 있는 편의 메서드
+//    public Address getDefaultAddress() {
+//        return this.addresses.stream()
+//                .filter(Address::isDefault)
+//                .findFirst()
+//                .orElseThrow(() -> new UserException(UserErrorCode.ADDRESSS_NOT_FOUND_DEFAULT));
+//    }
 }

@@ -1,7 +1,13 @@
 rootProject.name = 'backend'
 include 'common'
+//include 'common:core'
+//include 'common:webflux'
+//include 'common:webmvc'
+
 include 'apps:core'
 include 'apps:user'
 include 'apps:subscription'
 include 'apps:admin'
 include 'apps:gateway'
+
+

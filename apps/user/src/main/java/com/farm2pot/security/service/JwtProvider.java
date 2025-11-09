@@ -1,8 +1,8 @@
 package com.farm2pot.security.service;
 
-import com.farm2pot.security.config.SecurityProperties;
-import com.farm2pot.common.exception.UserException;
+import com.farm2pot.common.exception.BaseException;
 import com.farm2pot.common.exception.UserErrorCode;
+import com.farm2pot.security.config.SecurityProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -80,9 +80,9 @@ public class JwtProvider {
                     .getExpiration();
             return expiration.getTime() - System.currentTimeMillis();
         } catch (ExpiredJwtException e) {
-            throw new UserException(UserErrorCode.EXPIRED_TOKEN);
+            throw new BaseException(UserErrorCode.EXPIRED_TOKEN);
         } catch (JwtException e) {
-            throw new UserException(UserErrorCode.INVALID_TOKEN);
+            throw new BaseException(UserErrorCode.INVALID_TOKEN);
         }
     }
 
@@ -98,9 +98,9 @@ public class JwtProvider {
                     .getBody()
                     .getSubject();
         } catch (ExpiredJwtException e) {
-            throw new UserException(UserErrorCode.EXPIRED_TOKEN);
+            throw new BaseException(UserErrorCode.EXPIRED_TOKEN);
         } catch (JwtException e) {
-            throw new UserException(UserErrorCode.INVALID_TOKEN);
+            throw new BaseException(UserErrorCode.INVALID_TOKEN);
         }
     }
 
@@ -115,13 +115,13 @@ public class JwtProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
-            throw new UserException(UserErrorCode.EXPIRED_TOKEN);
+            throw new BaseException(UserErrorCode.EXPIRED_TOKEN);
         } catch (MalformedJwtException | SignatureException e) {
-            throw new UserException(UserErrorCode.INVALID_TOKEN);
+            throw new BaseException(UserErrorCode.INVALID_TOKEN);
         } catch (JwtException e) {
-            throw new UserException(UserErrorCode.UNAUTHORIZED_USER);
+            throw new BaseException(UserErrorCode.UNAUTHORIZED_USER);
         } catch (IllegalArgumentException e) {
-            throw new UserException(UserErrorCode.INVALID_TOKEN, "토큰 값이 비어 있습니다.");
+            throw new BaseException(UserErrorCode.NULL_TOKEN);
         }
     }
 
@@ -146,9 +146,9 @@ public class JwtProvider {
             return Collections.emptyList();
 
         } catch (ExpiredJwtException e) {
-            throw new UserException(UserErrorCode.EXPIRED_TOKEN);
+            throw new BaseException(UserErrorCode.EXPIRED_TOKEN);
         } catch (JwtException e) {
-            throw new UserException(UserErrorCode.INVALID_TOKEN);
+            throw new BaseException(UserErrorCode.INVALID_TOKEN);
         }
     }
 }

@@ -1,16 +1,11 @@
 package com.farm2pot.user.controller;
 
-import com.farm2pot.common.exception.UserException;
-import com.farm2pot.common.response.ResponseMessage;
-import com.farm2pot.user.controller.dto.UserDto;
-import com.farm2pot.user.service.dto.UserPasswordCheckDto;
+import com.farm2pot.user.controller.dto.EditUserRequest;
 import com.farm2pot.user.entity.User;
 import com.farm2pot.user.service.UserService;
+import com.farm2pot.user.service.dto.UserPasswordCheckDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user/auth")
@@ -19,31 +14,20 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/health")
-    public ResponseMessage health() {
-        return ResponseMessage.success(Map.of(
-                    "status", "UP",
-                    "service", "user-service",
-                    "timestamp", System.currentTimeMillis()
-                )
-        );
-    }
-
     // 로그아웃
     @DeleteMapping("/logout")
-    public ResponseMessage<String> logout(@RequestParam("id") Long id ) {
+    public void logout(@RequestParam("id") Long id ) {
         userService.logout(id);
-        return ResponseMessage.success("logout success");
     }
 
     /**
      * 사용자 정보 수정
-     * @param userDto
+     * @param editUserRequest
      * @return
      */
     @PatchMapping("/edit")
-    public ResponseMessage<User> editUser(@RequestBody @Validated UserDto userDto) {
-        return ResponseMessage.success("edit UserInfo ...success", userService.editUserInfo(userDto));
+    public User editUser(@RequestBody EditUserRequest editUserRequest) {
+        return userService.editUserInfo(editUserRequest);
     }
 
     /**
@@ -52,9 +36,8 @@ public class UserController {
      * @return
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseMessage<String> deleteUser(@PathVariable("id") Long id) {
+    public void deleteUser(@PathVariable("id") Long id) {
         userService.deleteUserById(id);
-        return ResponseMessage.success("delete User ...success");
     }
 
     /**
@@ -63,8 +46,8 @@ public class UserController {
      * @return
      */
     @GetMapping("/userinfo-lid/{loginId}")
-    public ResponseMessage<User> getUserInfoByLoginId(@PathVariable("loginId") String loginId) {
-        return ResponseMessage.success("select User by LoginId Info", userService.findByLoginId(loginId));
+    public User getUserInfoByLoginId(@PathVariable("loginId") String loginId) {
+        return userService.findByLoginId(loginId);
     }
 
     /**
@@ -73,23 +56,18 @@ public class UserController {
      * @return
      */
     @GetMapping("/userinfo-uid/{id}")
-    public ResponseMessage<User> getUserInfoByUserId(@PathVariable("id") Long id) {
-        return ResponseMessage.success("select User by Id Info", userService.findById(id));
+    public User getUserInfoByUserId(@PathVariable("id") Long id) {
+        return userService.findById(id);
     }
 
     /**
      * 사용자 패스워드 체크.. 마이페이지 접근 시 필요
      * X-USER-ID, 변경패스워드 필요
      * @param userPasswordCheckDto
-     * @return
+     * @return boolean
      */
     @PostMapping("/check-password")
-    public ResponseMessage<String> checkPassword(@RequestBody UserPasswordCheckDto userPasswordCheckDto) {
-        try {
-            userService.checkUser(userPasswordCheckDto);
-            return ResponseMessage.success("CHECK PASSWORD...... SUCCESS");
-        }catch (UserException e) {
-            return ResponseMessage.fail(e.getMessage());
-        }
+    public boolean checkPassword(@RequestBody UserPasswordCheckDto userPasswordCheckDto) {
+            return userService.checkUser(userPasswordCheckDto);
     }
 }

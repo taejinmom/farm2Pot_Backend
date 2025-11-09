@@ -1,4 +1,4 @@
-package com.farm2pot.user.service.dto;
+package com.farm2pot.address.service.dto;
 
 import com.farm2pot.address.entity.Address;
 
@@ -6,9 +6,9 @@ import com.farm2pot.address.entity.Address;
  * packageName    : com.farm2pot.user.service.dto
  * author         : TAEJIN
  * date           : 2025-11-06
- * description    :
+ * description    : 사용자의 기본 배송지 정보
  */
-public record UserWithDefaultAddressDto(
+public record UserWithDefaultAddress(
         Long userId,
         String loginId,
         String recipientName,

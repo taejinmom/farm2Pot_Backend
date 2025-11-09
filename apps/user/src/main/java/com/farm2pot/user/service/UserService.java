@@ -1,22 +1,19 @@
 package com.farm2pot.user.service;
 
-import com.farm2pot.address.entity.Address;
-import com.farm2pot.address.repository.AddressRepository;
-import com.farm2pot.address.service.AddressService;
 import com.farm2pot.auth.repository.RefreshTokenRepository;
+import com.farm2pot.common.exception.BaseException;
 import com.farm2pot.common.exception.UserErrorCode;
-import com.farm2pot.common.exception.UserException;
 import com.farm2pot.common.service.CommonService;
-import com.farm2pot.user.controller.dto.UserDto;
-import com.farm2pot.user.service.dto.UserPasswordCheckDto;
+import com.farm2pot.user.controller.dto.EditUserRequest;
 import com.farm2pot.user.entity.User;
-import com.farm2pot.user.mapper.UserMapper;
+import com.farm2pot.user.mapper.EditUserMapper;
 import com.farm2pot.user.repository.UserRepository;
-import com.farm2pot.user.service.dto.UserWithDefaultAddressDto;
+import com.farm2pot.user.service.dto.UserPasswordCheckDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
@@ -35,10 +32,9 @@ import static com.farm2pot.common.exception.UserErrorCode.USER_NOT_FOUND;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final AddressRepository addressRepository;
     private final CommonService commonService;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserMapper userMapper;
+    private final EditUserMapper editUserMapper;
 
     /**
      * 로그아웃 (Refresh Token 제거)
@@ -46,7 +42,7 @@ public class UserService {
     @Transactional
     public void logout(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
         refreshTokenRepository.deleteByUserId(user.getId());
     }
 
@@ -54,14 +50,14 @@ public class UserService {
      * 사용자 정보 조회 (loginId)
      */
     public User findByLoginId(String loginId) {
-        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new UserException(USER_NOT_FOUND));
+        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
         return user;
     }
     /**
      * 사용자 정보 조회 (id)
      */
     public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new UserException(USER_NOT_FOUND));
+        return userRepository.findById(id).orElseThrow(() -> new BaseException(USER_NOT_FOUND));
     }
 
 
@@ -70,22 +66,26 @@ public class UserService {
      * 사용자 정보 수정 (프로필 수정)
      */
     @Transactional
-    public User editUserInfo(UserDto userDto) {
+    public User editUserInfo(EditUserRequest editUserRequest) {
         // 기존 user Data -> Id로 조회 할 것
-        User user = userRepository.findById(userDto.getId())
-                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
+        User user = userRepository.findById(editUserRequest.id())
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
         //패스워드 변경이 있었는지 확인
-        String password = Optional.ofNullable(userDto)
-                .map(UserDto::getPassword)
-                .orElse(null);
+        String password = editUserRequest.password();
 
-        String ecodedPassword = commonService.encodePassword(password);
-        userDto.setPassword(ecodedPassword);
+        EditUserRequest updateUserInfo = editUserRequest;
+        if(!StringUtils.isEmpty(password)){
+            if(commonService.matches(password, user.getPassword())){
+                updateUserInfo = editUserRequest.toBuilder()
+                        .password(commonService.encodePassword(password))
+                        .build();
+            }
+        }
 
         //Dto to Entity
-        userMapper.updateEntityFromDto(
-                userDto, user);
+        editUserMapper.updateEntityFromDto(
+                updateUserInfo, user);
         return user;
     }
 
@@ -95,7 +95,8 @@ public class UserService {
      * @param id
      */
     public void deleteUserById(Long id){
-        if (userRepository.existsById(id)) userRepository.deleteById(id);
+        if (!userRepository.existsById(id)) new BaseException(USER_NOT_FOUND);
+        userRepository.deleteById(id);
     }
 
 
@@ -105,7 +106,7 @@ public class UserService {
     public boolean validatePassword(String oldPassword, String newPassword ) {
         return Optional.of(commonService.matches(newPassword, oldPassword))
                 .filter(result -> result) // true일 때만 통과
-                .orElseThrow(() -> new UserException(INVALID_PASASWORD));
+                .orElseThrow(() -> new BaseException(INVALID_PASASWORD));
     }
 
     /**
@@ -114,7 +115,7 @@ public class UserService {
      * @return
      */
     public boolean checkUser(UserPasswordCheckDto userPasswordCheckDto) {
-        User user = userRepository.findById(userPasswordCheckDto.id()).orElseThrow(() -> new UserException(UserErrorCode.UNAUTHORIZED_USER));
+        User user = userRepository.findById(userPasswordCheckDto.id()).orElseThrow(() -> new BaseException(UserErrorCode.UNAUTHORIZED_USER));
         return validatePassword(user.getPassword(), userPasswordCheckDto.password());
     }
 }

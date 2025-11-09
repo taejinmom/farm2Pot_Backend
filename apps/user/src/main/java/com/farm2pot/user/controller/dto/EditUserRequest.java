@@ -1,11 +1,13 @@
-package com.farm2pot.auth.controller.dto;
+package com.farm2pot.user.controller.dto;
 
 import com.farm2pot.address.controller.dto.AddressData;
+import lombok.Builder;
 
 import java.util.Date;
 import java.util.List;
 
-public record CreateUserRequest2 (
+@Builder(toBuilder = true)
+public record EditUserRequest(
         Long id,
         String loginId,
         String password,
@@ -18,6 +20,5 @@ public record CreateUserRequest2 (
         String gender,
         String nickName,
         List<String> roles,
-        AddressData addressData // 사용자 주소
-){
-}
+        AddressData addressData // 기본 배송지
+){}

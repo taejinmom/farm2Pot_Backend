@@ -20,5 +20,5 @@ public record CreateUserRequest (
         String gender,
         String nickName,
         List<String> roles,
-        AddressData addressData // 사용자 주소
+        AddressData address // 기본 배송지
 ){}

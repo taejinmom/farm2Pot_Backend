@@ -53,7 +53,7 @@ public class Address {
     private String addressLine2;
 
     @Column(name = "is_default" )
-    private boolean isDefault = false;
+    private boolean isDefault;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

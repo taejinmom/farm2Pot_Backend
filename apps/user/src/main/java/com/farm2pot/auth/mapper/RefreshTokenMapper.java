@@ -1,9 +1,9 @@
 package com.farm2pot.auth.mapper;
 
 import com.farm2pot.auth.controller.dto.TokenRefresh;
+import com.farm2pot.auth.entity.RefreshToken;
 import com.farm2pot.common.config.MapStructConfig;
 import com.farm2pot.common.mapper.BaseMapper;
-import com.farm2pot.auth.entity.RefreshToken;
 import org.mapstruct.Mapper;
 
 /**

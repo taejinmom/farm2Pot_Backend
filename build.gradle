@@ -55,7 +55,7 @@ subprojects {
     }
 
     // common 제외하고 나머지에 공통 의존성 추가
-    if (project.name != 'common') {
+    if (project.name != 'common' && project.name != 'gateway') {
         dependencies {
             implementation project(':common')  // 모든 apps에 common 추가
         }

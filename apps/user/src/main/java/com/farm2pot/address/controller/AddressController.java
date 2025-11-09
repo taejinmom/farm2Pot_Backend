@@ -2,9 +2,8 @@ package com.farm2pot.address.controller;
 
 import com.farm2pot.address.controller.dto.AddressData;
 import com.farm2pot.address.entity.Address;
-import com.farm2pot.common.response.ResponseMessage;
 import com.farm2pot.address.service.AddressService;
-import com.farm2pot.user.service.dto.UserWithDefaultAddressDto;
+import com.farm2pot.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +29,8 @@ public class AddressController {
      * @return
      */
     @GetMapping("/address/{userId}")
-    public ResponseMessage<List<Address>> findAllAddress(@PathVariable("userId") Long userId) {
-        return ResponseMessage.success("Select UserAddress By UserId", addressService.findAllAddressByUserId(userId));
+    public List<Address> findAllAddress(@PathVariable("userId") Long userId) {
+        return addressService.findAllAddressByUserId(userId);
     }
 
 
@@ -41,14 +40,8 @@ public class AddressController {
      * @return
      */
     @PostMapping("/address")
-    public ResponseMessage<String> addUserAddress(@RequestBody AddressData addressData) {
-        try{
+    public void addUserAddress(@RequestBody AddressData addressData) {
             addressService.addUserAddress(addressData);
-            return ResponseMessage.success("Insert UserAddress.... Success");
-        }catch (Exception e) {
-            e.printStackTrace();
-            return ResponseMessage.fail("Insert UserAddress.... Failure");
-        }
     }
 
     /**
@@ -57,9 +50,9 @@ public class AddressController {
      * @param addressData
      * @return
      */
-    @PutMapping("/address/{addrId}")
-    public ResponseMessage<Address> editAddress(@PathVariable("addrId") Long addrId, @RequestBody AddressData addressData) {
-        return ResponseMessage.success("Select UserAddress By UserId", addressService.findUserAddressById(addrId));
+    @PatchMapping("/address/{addrId}")
+    public AddressData editAddress(@PathVariable("addrId") Long addrId, @RequestBody AddressData addressData) {
+        return addressService.editUserAddress(addrId, addressData);
     }
 
     /**
@@ -68,8 +61,8 @@ public class AddressController {
      * @return
      */
     @GetMapping("/address/default/{userId}")
-    public ResponseMessage<UserWithDefaultAddressDto> findDefaultAddress(@PathVariable("userId") Long userId) {
-        return ResponseMessage.success("Select Default Address By UserId", addressService.getUserWithDefaultAddress(userId));
+    public User findDefaultAddress(@PathVariable("userId") Long userId) {
+        return addressService.getUserWithDefaultAddress(userId);
     }
 
     /**
@@ -77,9 +70,8 @@ public class AddressController {
      * @param addrId
      * @return
      */
-    @DeleteMapping("/address/delete/uid/{addrId}")
-    public ResponseMessage<String> deleteAddress(@PathVariable("addrId") Long addrId) {
+    @DeleteMapping("/address/{addrId}")
+    public void deleteAddress(@PathVariable("addrId") Long addrId) {
         addressService.deleteUserAddressByUserId(addrId);
-        return ResponseMessage.success("Delete UserAddress By AddressId");
     }
 }

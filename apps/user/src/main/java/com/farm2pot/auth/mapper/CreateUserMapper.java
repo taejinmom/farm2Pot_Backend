@@ -1,4 +1,4 @@
-package com.farm2pot.user.mapper;
+package com.farm2pot.auth.mapper;
 
 import com.farm2pot.auth.controller.dto.CreateUserRequest;
 import com.farm2pot.common.config.MapStructConfig;

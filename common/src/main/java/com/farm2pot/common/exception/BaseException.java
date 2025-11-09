@@ -20,17 +20,12 @@ public class BaseException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    public BaseException(BaseErrorCode errorCode, String customMessage) {
-        super(customMessage); // RuntimeException(String message) 호출
-        this.errorCode = errorCode;
-    }
-
     public HttpStatus getStatus() {
         return errorCode.getStatus();
     }
-
     public String getCode() {
         return errorCode.getCode();
     }
+    public String getMessage() { return errorCode.getMessage(); }
 
 }

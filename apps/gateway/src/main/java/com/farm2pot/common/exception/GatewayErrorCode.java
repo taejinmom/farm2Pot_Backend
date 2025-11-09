@@ -1,7 +1,5 @@
 package com.farm2pot.common.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -10,9 +8,7 @@ import org.springframework.http.HttpStatus;
  * date           : 2025-10-11
  * description    :
  */
-@Getter
-@AllArgsConstructor
-public enum GatewayErrorCode implements BaseErrorCode {
+public enum GatewayErrorCode  {
     // JWT 관련 오류
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "GATE_001", "토큰이 만료되었거나 유효하지 않습니다."),
     TOKEN_BLACKLISTED(HttpStatus.UNAUTHORIZED, "GATE_002", "로그아웃되었거나 블랙리스트에 등록된 토큰입니다."),
@@ -27,4 +23,22 @@ public enum GatewayErrorCode implements BaseErrorCode {
     private final HttpStatus status;
     private final String code;
     private final String message;
+
+    GatewayErrorCode(HttpStatus status, String code, String message) {
+        this.status = status;
+        this.code = code;
+        this.message = message;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

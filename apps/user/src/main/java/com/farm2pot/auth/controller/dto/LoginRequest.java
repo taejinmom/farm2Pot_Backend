@@ -1,4 +1,4 @@
-package com.farm2pot.user.controller.dto;
+package com.farm2pot.auth.controller.dto;
 
 import lombok.Builder;
 

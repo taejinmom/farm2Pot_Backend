@@ -1,7 +1,7 @@
 package com.farm2pot.address.mapper;
 
-import com.farm2pot.address.controller.dto.AddressData;
 import com.farm2pot.address.entity.Address;
+import com.farm2pot.address.service.dto.DefaultAddressResponse;
 import com.farm2pot.common.config.MapStructConfig;
 import com.farm2pot.common.mapper.BaseMapper;
 import org.mapstruct.Mapper;
@@ -15,9 +15,15 @@ import org.mapstruct.MappingTarget;
  * description    :
  */
 @Mapper(config = MapStructConfig.class)
-public interface AddressMapper extends BaseMapper<Address, AddressData> {
+public interface DefaultAddressMapper extends BaseMapper<Address, DefaultAddressResponse> {
+
+    @Override
+    @Mapping(source = "user.id", target = "userId")
+    @Mapping(source = "user.loginId", target = "loginId")
+    @Mapping(source = "default", target = "isDefault")
+    DefaultAddressResponse toDto(Address entity);
 
     @Override
     @Mapping(target = "id", ignore = true)
-    void updateEntityFromDto(AddressData dto, @MappingTarget Address entity);
+    void updateEntityFromDto(DefaultAddressResponse dto, @MappingTarget Address entity);
 }

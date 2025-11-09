@@ -2,24 +2,24 @@ package com.farm2pot.auth.service;
 
 
 import com.farm2pot.address.controller.dto.AddressData;
-import com.farm2pot.address.entity.Address;
-import com.farm2pot.auth.controller.dto.TokenRefresh;
-import com.farm2pot.auth.controller.dto.CreateUserRequest;
-import com.farm2pot.auth.service.dto.LoginTokenResponse;
-import com.farm2pot.user.controller.dto.LoginRequest;
-import com.farm2pot.user.controller.dto.UserDto;
-import com.farm2pot.auth.entity.RefreshToken;
-import com.farm2pot.user.entity.User;
-import com.farm2pot.auth.mapper.RefreshTokenMapper;
 import com.farm2pot.address.mapper.AddressMapper;
-import com.farm2pot.user.mapper.CreateUserMapper;
-import com.farm2pot.user.mapper.UserMapper;
-import com.farm2pot.auth.repository.RefreshTokenRepository;
 import com.farm2pot.address.repository.AddressRepository;
-import com.farm2pot.user.repository.UserRepository;
-import com.farm2pot.common.exception.UserException;
+import com.farm2pot.address.service.AddressService;
+import com.farm2pot.auth.controller.dto.CreateUserRequest;
+import com.farm2pot.auth.controller.dto.LoginRequest;
+import com.farm2pot.auth.controller.dto.TokenRefresh;
+import com.farm2pot.auth.entity.RefreshToken;
+import com.farm2pot.auth.mapper.CreateUserMapper;
+import com.farm2pot.auth.mapper.RefreshTokenMapper;
+import com.farm2pot.auth.repository.RefreshTokenRepository;
+import com.farm2pot.auth.service.dto.LoginTokenResponse;
+import com.farm2pot.common.exception.BaseException;
 import com.farm2pot.common.exception.UserErrorCode;
 import com.farm2pot.security.service.JwtProvider;
+import com.farm2pot.user.controller.dto.UserResponse;
+import com.farm2pot.user.entity.User;
+import com.farm2pot.user.mapper.UserMapper;
+import com.farm2pot.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,6 +54,7 @@ public class AuthService {
     private final UserMapper userMapper;
     private final CreateUserMapper createUserMapper;
     private final AddressMapper userAddressMapper;
+    private final AddressService addressService;
 
     /**
      * Refresh Token을 이용한 Access Token 재발급
@@ -61,22 +62,22 @@ public class AuthService {
     public LoginTokenResponse refresh(TokenRefresh request) {
         // 1. 토큰 존재 확인
         RefreshToken tokenEntity = refreshTokenRepository.findByToken(request.token())
-                .orElseThrow(() -> new UserException(UserErrorCode.INVALID_TOKEN));
+                .orElseThrow(() -> new BaseException(UserErrorCode.INVALID_TOKEN));
 
         // 2. 만료 여부 확인
         if (tokenEntity.getExpiryDate().isBefore(Instant.now())) {
             refreshTokenRepository.delete(tokenEntity);
-            throw new UserException(UserErrorCode.EXPIRED_TOKEN);
+            throw new BaseException(UserErrorCode.EXPIRED_TOKEN);
         }
 
         // 3. 사용자 정보 확인
         User user = userRepository.findById(tokenEntity.getUserId())
-                .orElseThrow(() -> new UserException(USER_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
         // 4. 새 Access Token 발급
         String newAccessToken = jwtProvider.generateAccessToken(user.getId(), user.getRoles());
 
-        return new LoginTokenResponse(user.getId(), newAccessToken, request.token(), userMapper.toDto(user));
+        return new LoginTokenResponse(user.getId(), newAccessToken, request.token());
     }
 
     /**
@@ -86,11 +87,11 @@ public class AuthService {
     public LoginTokenResponse login(LoginRequest loginRequest, HttpServletResponse response) {
         // 1. 로그인 ID 확인
         User user = userRepository.findByLoginId(loginRequest.loginId())
-                .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(UserErrorCode.USER_NOT_FOUND));
 
         // 2. 비밀번호 확인
         if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
-            throw new UserException(UserErrorCode.INVALID_CREDENTIALS);
+            throw new BaseException(UserErrorCode.INVALID_CREDENTIALS);
         }
 
         // 3. Access Token & Refresh Token 발급
@@ -112,8 +113,8 @@ public class AuthService {
         // 6. response Header에 등록
         response.setHeader("X-USER-ID", user.getId().toString());
 
-        // 5. 결과 반환
-        return new LoginTokenResponse(user.getId(), accessToken, refreshToken, userMapper.toDto(user));
+        //결과 반환
+        return new LoginTokenResponse(user.getId(), accessToken, refreshToken);
     }
 
     /**
@@ -135,11 +136,11 @@ public class AuthService {
 
     // 전체 사용자 조회
     public List<User> getAllUsers() {
-        return Optional.of(userRepository.findAll()).orElseThrow(() -> new UserException(INTERNAL_SERVER_ERROR));
+        return Optional.of(userRepository.findAll()).orElseThrow(() -> new BaseException(INTERNAL_SERVER_ERROR));
     }
 
     public void init() {
-        UserDto dto = UserDto.builder()
+        UserResponse dto = UserResponse.builder()
                 .loginId("xclick")
                 .email("taejin1@example.com")
                 .password(passwordEncoder.encode("a"))
@@ -162,7 +163,7 @@ public class AuthService {
      * @return
      */
     public AddressData getUserAddress(CreateUserRequest createUserRequest, User user) {
-        AddressData addressData = createUserRequest.addressData();
+        AddressData addressData = createUserRequest.address();
         return addressData.toBuilder()
                 .isDefault(true)
                 .user(user)

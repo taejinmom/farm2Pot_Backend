@@ -1,25 +1,19 @@
-package com.farm2pot.address.controller.dto;
+package com.farm2pot.address.service.dto;
 
 import com.farm2pot.user.entity.User;
-import lombok.*;
 
 import java.time.LocalDateTime;
 
 /**
- * packageName    : com.farm2pot.user.dto
+ * packageName    : com.farm2pot.address.service.dto
  * author         : TAEJIN
- * date           : 2025-10-14
+ * date           : 2025-11-07
  * description    :
  */
-
-
-@Builder(toBuilder = true)
-public record AddressData (
+public record DefaultAddressResponse (
         Long id,
         Long userId,
-        User user,
         String loginId,
-
         String recipientName,
         String phoneNumber,
         String postalCode,
@@ -28,7 +22,4 @@ public record AddressData (
         boolean isDefault,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-
-){
-
-}
+){}

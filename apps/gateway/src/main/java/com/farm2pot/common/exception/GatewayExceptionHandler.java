@@ -1,42 +1,53 @@
-package com.farm2pot.common.exception;
-
-import com.farm2pot.common.response.ErrorResponse;
-import com.farm2pot.common.response.ResponseMessage;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import reactor.core.publisher.Mono;
-
-/**
- * packageName    : com.farm2pot.common.exception
- * author         : TAEJIN
- * date           : 2025-10-11
- * description    : gateway - ExceptionHandler (ServerHttpRequest)
- */
-
-@RestControllerAdvice
-public class GatewayExceptionHandler {
-    /*@ExceptionHandler(GatewayException.class)
-    public Mono<ResponseEntity<ResponseMessage<ErrorResponse>>> handleCustomException(GatewayException ex, ServerHttpRequest request) {
-        String message = ex.getLocalizedMessage();
-        ErrorResponse error = ErrorResponse.of(ex.getStatus(), message, request.getPath().value());
-        return Mono.just(ResponseEntity.status(ex.getStatus()).body(ResponseMessage.fail(message,error)));
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Mono<ResponseEntity<ResponseMessage<ErrorResponse>>> handleValidationException(MethodArgumentNotValidException ex, ServerHttpRequest request) {
-        String message = ex.getBindingResult().getFieldError().getDefaultMessage();
-        ErrorResponse error = ErrorResponse.of(HttpStatus.BAD_REQUEST, message, request.getPath().value());
-        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ResponseMessage.fail(message,error)));
-    }
-
-    @ExceptionHandler(Exception.class)
-    public Mono<ResponseEntity<ResponseMessage<ErrorResponse>>> handleException(Exception ex, ServerHttpRequest request) {
-        String message = ex.getLocalizedMessage();
-        ErrorResponse error = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, message, request.getPath().value());
-        return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ResponseMessage.fail(message, error)));
-    }*/
-}
+//package com.farm2pot.common.exception;
+//
+//import com.fasterxml.jackson.core.JsonProcessingException;
+//import com.fasterxml.jackson.databind.ObjectMapper;
+//import org.springframework.http.HttpStatus;
+//
+//
+//import org.springframework.core.annotation.Order;
+//import org.springframework.http.MediaType;
+//import org.springframework.stereotype.Component;
+//import org.springframework.web.server.ServerWebExchange;
+//import org.springframework.web.server.WebExceptionHandler;
+//import reactor.core.publisher.Mono;
+//
+//import java.time.LocalDateTime;
+//
+///**
+// * packageName    : com.farm2pot.common.exception
+// * author         : TAEJIN
+// * date           : 2025-10-11
+// * description    : gateway - ExceptionHandler (ServerHttpRequest)
+// */
+//@Component
+//@Order(-2) // 우선순위
+//public class GatewayExceptionHandler implements WebExceptionHandler {
+//
+//    @Override
+//    public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
+//        GatewayErrorResponse<Object> response;
+//
+//        if (ex instanceof GatewayException ge) {
+//            response = GatewayErrorResponse.error(
+//                    ge.getErrorCode().getMessage(),
+//                    ge.getStatus()
+//            );
+//        } else {
+//            response = GatewayErrorResponse.error("Internal Server Error", 500);
+//        }
+//
+//        byte[] bytes;
+//        try {
+//            bytes = new ObjectMapper().writeValueAsBytes(response);
+//        } catch (Exception e) {
+//            bytes = "{\"success\":false,\"message\":\"Serialization Error\",\"status\":500}".getBytes();
+//        }
+//
+//        exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+//        exchange.getResponse().setStatusCode(HttpStatus.valueOf(response.getStatus()));
+//
+//        return exchange.getResponse()
+//                .writeWith(Mono.just(exchange.getResponse().bufferFactory().wrap(bytes)));
+//    }
+//}

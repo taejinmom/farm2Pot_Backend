@@ -3,19 +3,29 @@ package com.farm2pot.common.exception;
 import lombok.Getter;
 
 /**
- * packageName    : com.farm2pot.jwt.exception
+ * packageName    : com.farm2pot.common.exception
  * author         : TAEJIN
- * date           : 2025-10-11
+ * date           : 2025-11-09
  * description    :
  */
+public class GatewayException extends RuntimeException {
 
-@Getter
-public class GatewayException extends BaseException {
+    private final GatewayErrorCode errorCode;
+
     public GatewayException(GatewayErrorCode errorCode) {
-        super(errorCode);
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
     }
 
-    public GatewayException(BaseErrorCode errorCode, String customMessage) {
-        super(errorCode, customMessage);
+    public GatewayErrorCode getErrorCode() {
+        return errorCode;
+    }
+
+    public int getStatus() {
+        return errorCode.getStatus().value();
+    }
+
+    public String getCode() {
+        return errorCode.getCode();
     }
 }

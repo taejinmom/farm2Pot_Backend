@@ -1,4 +1,4 @@
-package com.farm2pot.user.mapper;
+package com.farm2pot.auth.mapper;
 
 import com.farm2pot.auth.controller.dto.CreateUserRequest;
 import com.farm2pot.user.entity.User;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-11-06T21:47:41+0900",
+    date = "2025-11-09T02:05:05+0900",
     comments = "version: 1.6.3, compiler: javac, environment: Java 21.0.8 (Microsoft)"
 )
 @Component
@@ -114,35 +114,6 @@ public class CreateUserMapperImpl implements CreateUserMapper {
     public void updateEntityFromDto(CreateUserRequest dto, User entity) {
         if ( dto == null ) {
             return;
-        }
-
-        if ( dto.loginId() != null ) {
-            entity.setLoginId( dto.loginId() );
-        }
-        if ( dto.email() != null ) {
-            entity.setEmail( dto.email() );
-        }
-        if ( dto.password() != null ) {
-            entity.setPassword( dto.password() );
-        }
-        if ( dto.name() != null ) {
-            entity.setName( dto.name() );
-        }
-        if ( dto.loginType() != null ) {
-            entity.setLoginType( dto.loginType() );
-        }
-        if ( dto.phoneNo() != null ) {
-            entity.setPhoneNo( dto.phoneNo() );
-        }
-        if ( dto.birthDay() != null ) {
-            entity.setBirthDay( dto.birthDay() );
-        }
-        entity.setStatus( dto.status() );
-        if ( dto.gender() != null ) {
-            entity.setGender( dto.gender() );
-        }
-        if ( dto.nickName() != null ) {
-            entity.setNickName( dto.nickName() );
         }
 
         afterUpdate( dto, entity );

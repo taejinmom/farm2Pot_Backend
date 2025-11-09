@@ -21,7 +21,7 @@ public class BaseException extends RuntimeException {
     }
 
     public HttpStatus getStatus() {
-        return errorCode.getStatus();
+        return errorCode.getHttpStatus();
     }
     public String getCode() {
         return errorCode.getCode();

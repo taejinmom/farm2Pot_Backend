@@ -25,13 +25,13 @@ public enum GatewayErrorCode  {
     private final String message;
 
     GatewayErrorCode(HttpStatus status, String code, String message) {
-        this.status = status;
+        this.httpStatus = status;
         this.code = code;
         this.message = message;
     }
 
     public HttpStatus getStatus() {
-        return status;
+        return httpStatus;
     }
 
     public String getCode() {

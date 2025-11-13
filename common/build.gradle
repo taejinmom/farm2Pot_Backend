@@ -6,7 +6,10 @@ plugins {
 dependencies {
     // common이 필요한 최소한의 의존성만
     api 'org.springframework.boot:spring-boot-starter'
-    api 'org.springframework.boot:spring-boot-starter-web'
+
+    // MVC 관련 의존성 - 컴파일 시에만 필요, 런타임은 각 모듈에서 제공
+    // Gateway(WebFlux)에는 포함되지 않고, Admin/User 등 MVC 모듈에서만 사용
+    compileOnly 'org.springframework.boot:spring-boot-starter-web'
 
     // MapStruct
     api "org.mapstruct:mapstruct:${mapstructVersion}"

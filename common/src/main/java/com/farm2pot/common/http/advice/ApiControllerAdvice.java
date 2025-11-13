@@ -4,6 +4,9 @@ import com.farm2pot.common.exception.BaseException;
 import com.farm2pot.common.http.response.ApiResponse;
 import com.farm2pot.common.http.response.ApiResponseCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -24,6 +27,9 @@ import java.util.Map;
  */
 @Slf4j
 @RestControllerAdvice
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@ConditionalOnClass(NoHandlerFoundException.class)
+@ConditionalOnProperty(name = "common.response.wrap.enabled", havingValue = "true", matchIfMissing = true)
 public class ApiControllerAdvice {
 
     /**

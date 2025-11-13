@@ -51,3 +51,9 @@ logging:
     org.springframework.boot.web.embedded.netty: DEBUG
 
 
+
+common:
+  response:
+    wrap:
+      enabled: false
+

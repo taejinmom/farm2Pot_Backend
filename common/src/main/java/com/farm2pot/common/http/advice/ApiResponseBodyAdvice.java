@@ -1,6 +1,9 @@
-package com.farm2pot.common.http.advice;
+﻿package com.farm2pot.common.http.advice;
 
 import com.farm2pot.common.http.response.ApiResponse;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -14,6 +17,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
  * Controller에서 DTO만 반환하면 자동으로 공통 응답 형태로 변환
  */
 @RestControllerAdvice(basePackages = "com.farm2pot")
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@ConditionalOnClass(org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice.class)
+@ConditionalOnProperty(name = "common.response.wrap.enabled", havingValue = "true", matchIfMissing = true)
 public class ApiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     @Override

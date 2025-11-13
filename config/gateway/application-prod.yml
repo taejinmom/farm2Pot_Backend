@@ -50,3 +50,9 @@ logging:
     com.farm2pot: ${LOGGING_LEVEL_COM_FARM2POT}
     org.springframework: ${LOGGING_LEVEL_ORG_SPRINGFRAMEWORK}
     org.springframework.boot.web.embedded.netty: DEBUG
+
+common:
+  response:
+    wrap:
+      enabled: false
+

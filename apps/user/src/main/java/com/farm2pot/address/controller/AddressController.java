@@ -51,7 +51,7 @@ public class AddressController {
      * @return
      */
     @PatchMapping("/address/{addrId}")
-    public AddressData editAddress(@PathVariable("addrId") Long addrId, @RequestBody AddressData addressData) {
+    public Address editAddress(@PathVariable("addrId") Long addrId, @RequestBody AddressData addressData) {
         return addressService.editUserAddress(addrId, addressData);
     }
 

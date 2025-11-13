@@ -13,6 +13,7 @@ import com.farm2pot.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -71,13 +72,17 @@ public class AddressService {
     }
 
     /**
-     *
+     * 배송지 수정
      * @param addrId
      * @param addressData
      */
-    public AddressData editUserAddress(Long addrId, AddressData addressData) {
+    @Transactional
+    public Address editUserAddress(Long addrId, AddressData addressData) {
+        Address address = addressRepository.findById(addrId)
+                .orElseThrow(() -> new BaseException(UserErrorCode.ADDRESS_NOT_FOUND));
 
-        return null;
+        addressMapper.updateEntityFromDto(addressData, address);
+        return address;
     }
 
 
@@ -93,9 +98,8 @@ public class AddressService {
      * userId로 user + 기본 주소 함께 조회
      */
     public User getUserWithDefaultAddress(Long userId) {
-        User user = userRepository.findUserWithAddresses(userId)
+        return userRepository.findUserWithAddresses(userId)
                 .orElseThrow(() -> new BaseException(UserErrorCode.USER_NOT_FOUND));
-        return user;
     }
 
     /**

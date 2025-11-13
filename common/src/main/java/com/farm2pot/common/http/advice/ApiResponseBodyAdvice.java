@@ -1,4 +1,4 @@
-﻿package com.farm2pot.common.http.advice;
+package com.farm2pot.common.http.advice;
 
 import com.farm2pot.common.http.response.ApiResponse;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -39,6 +39,11 @@ public class ApiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         // 이미 ApiResponse인 경우 그대로 반환
         if (body instanceof ApiResponse) {
             return body;
+        }
+
+        // void 메서드 처리 (body == null)
+        if (body == null) {
+            return ApiResponse.success("OK", null);
         }
 
         // DTO를 ApiResponse로 감싸서 반환

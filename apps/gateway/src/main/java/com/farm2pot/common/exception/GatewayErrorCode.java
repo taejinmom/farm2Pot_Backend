@@ -20,7 +20,7 @@ public enum GatewayErrorCode  {
     // 기타 공통 오류
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "GATE_999", "서버 내부 오류가 발생했습니다.");
 
-    private final HttpStatus status;
+    private final HttpStatus httpStatus;
     private final String code;
     private final String message;
 

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
  * description    :
  */
 public interface BaseErrorCode {
-    HttpStatus getStatus();
+    HttpStatus getHttpStatus();
     String getCode();
     String getMessage();
 }

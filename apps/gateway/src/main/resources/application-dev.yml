@@ -1,0 +1,47 @@
+# GATEWAY DEV
+server:
+  port: 19080
+
+# Spring
+spring:
+  application:
+    name: gateway-service
+  redis:
+    host: localhost
+    port: 26379
+    password: ""
+    timeout: 2000ms
+
+# SECURITY
+jwt:
+  security:
+    key: 6rCA7J6Q6rOgIO2GoOydtO2UhOuhnOygne2KuCBqd3Qgc2VjcmV0IO2CpOyeheuLiOuLpA==
+    whiteList:
+      - /api/user/public/**
+      - /api/test/**
+
+# Route 설정
+routes:
+  core:
+    url: http://localhost:18080
+    path: /api/core/**
+  user:
+    url: http://localhost:18081
+    path: /api/user/**
+  admin:
+    url: http://localhost:18082
+    path: /api/admin/**
+  subscription:
+    url: http://localhost:18083
+    path: /api/subs/**
+
+logging:
+  level:
+    com.farm2pot: DEBUG
+    org.springframework: WARN
+    org.springframework.boot.web.embedded.netty: DEBUG
+
+common:
+  response:
+    wrap:
+      enabled: false

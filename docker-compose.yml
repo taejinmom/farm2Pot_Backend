@@ -11,6 +11,9 @@ services:
       MYSQL_DATABASE: farm2pot
     volumes:
       - mysql-8-data:/var/lib/mysql
+      # Initialize schema & seed data from docs (schema 먼저, data 나중)
+      - ./docs/init-scripts/schema.sql:/docker-entrypoint-initdb.d/10_schema.sql
+      - ./docs/init-scripts/data.sql:/docker-entrypoint-initdb.d/20_data.sql
     networks:
       - farm2pot-network
     healthcheck:
@@ -76,7 +79,10 @@ services:
       ADMIN_SERVICE_URL: http://admin-service:8082
       SUBSCRIPTION_SERVICE_URL: http://subscription-service:8083
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_FRONTEND_HOST: localhost
+      SPRING_FRONTEND_USER_HOST: localhost:14001
+      SPRING_FRONTEND_ADMIN_HOST: localhost:14002
+      SPRING_DATA_REDIS_HOST: redis-master
+      SPRING_DATA_REDIS_PORT: 6379
       LOGGING_LEVEL_COM_FARM2POT: DEBUG
       LOGGING_LEVEL_ORG_SPRINGFRAMEWORK: WARN
     volumes:
@@ -84,10 +90,16 @@ services:
     command: >
       java -Dspring.config.location=/app/farm2pot/config/gateway/ -jar farm2pot-gateway.jar
     depends_on:
-      - core-service
-      - user-service
-      - admin-service
-      - subscription-service
+      redis-master:
+        condition: service_healthy
+      core-service:
+        condition: service_started
+      user-service:
+        condition: service_started
+      admin-service:
+        condition: service_started
+      subscription-service:
+        condition: service_started
     networks:
       - farm2pot-network
     restart: unless-stopped

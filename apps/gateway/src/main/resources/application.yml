@@ -1,0 +1,4 @@
+# GATEWAY
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}  # 기본 dev

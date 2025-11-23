@@ -34,6 +34,7 @@ ext {
     annotationVersion = '3.0.0'
     persistenceVersion = '3.2.0'
     mybatisVersion = '3.5.15'
+    commonsCollectionsVersion = '4.5.0'
 }
 
 subprojects {
@@ -70,6 +71,7 @@ subprojects {
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
         annotationProcessor 'org.projectlombok:lombok'
         implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation "org.apache.commons:commons-collections4:$commonsCollectionsVersion"
 
         /** Spring-Doc **/
         // implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: "$springdocVersion"
@@ -262,24 +264,32 @@ project(":apps:gateway") {
     }
 
     dependencies {
-        implementation project(':apps:core')
-
-        // WebFlux + Gateway
+        // WebFlux + Gateway (core 의존성 제거)
         implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
         implementation 'org.springframework.boot:spring-boot-starter-webflux'
         implementation 'org.springframework.boot:spring-boot-starter-security'
         implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+
+        // Lombok만 개별적으로 추가 (이미 상위에서 추가됨)
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
     }
 
-    // Gateway는 라우팅만 하므로 JPA 관련 의존성 제외
+    // Gateway는 라우팅만 하므로 모든 WebMVC, JPA 관련 의존성 제외
     configurations {
-        implementation.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
-        implementation.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-data-jpa'
-        implementation.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-data-redis'
-        implementation.exclude group: 'mysql', module: 'mysql-connector-java'
-        implementation.exclude group: 'org.mariadb.jdbc', module: 'mariadb-java-client'
-        implementation.exclude group: 'com.querydsl'
-        implementation.exclude group: 'com.github.gavlyukovskiy', module: 'p6spy-spring-boot-starter'
+        all {
+            exclude group: 'org.springframework.boot', module: 'spring-boot-starter-web'
+            exclude group: 'org.springframework.boot', module: 'spring-boot-starter-data-jpa'
+            exclude group: 'org.springframework.boot', module: 'spring-boot-starter-data-redis'
+            exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+            exclude group: 'org.springframework', module: 'spring-webmvc'
+            exclude group: 'mysql', module: 'mysql-connector-java'
+            exclude group: 'org.mariadb.jdbc', module: 'mariadb-java-client'
+            exclude group: 'com.querydsl'
+            exclude group: 'com.github.gavlyukovskiy', module: 'p6spy-spring-boot-starter'
+            exclude group: 'org.hibernate'
+            exclude group: 'jakarta.persistence'
+        }
     }
 
     springBoot {

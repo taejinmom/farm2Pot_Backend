@@ -3,7 +3,7 @@ package com.farm2pot.user.controller;
 import com.farm2pot.user.controller.dto.EditUserRequest;
 import com.farm2pot.user.entity.User;
 import com.farm2pot.user.service.UserService;
-import com.farm2pot.user.service.dto.UserPasswordCheckDto;
+import com.farm2pot.user.service.dto.CheckUserPassword;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +40,15 @@ public class UserController {
         userService.deleteUserById(id);
     }
 
+
+    /**
+     * 사용자 탈퇴 - id
+     * @param id
+     */
+    @PatchMapping("/deactivate/{id}")
+    public void deactivateUser(@PathVariable("id") Long id){
+
+    }
     /**
      * 사용자 정보 확인 - loginId
      * @param loginId
@@ -63,11 +72,11 @@ public class UserController {
     /**
      * 사용자 패스워드 체크.. 마이페이지 접근 시 필요
      * X-USER-ID, 변경패스워드 필요
-     * @param userPasswordCheckDto
+     * @param checkUserPassword
      * @return boolean
      */
     @PostMapping("/check-password")
-    public boolean checkPassword(@RequestBody UserPasswordCheckDto userPasswordCheckDto) {
-            return userService.checkUser(userPasswordCheckDto);
+    public boolean checkPassword(@RequestBody CheckUserPassword checkUserPassword) {
+            return userService.checkUser(checkUserPassword);
     }
 }

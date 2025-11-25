@@ -2,13 +2,14 @@ package com.farm2pot.user.service;
 
 import com.farm2pot.auth.repository.RefreshTokenRepository;
 import com.farm2pot.common.exception.BaseException;
-import com.farm2pot.common.exception.UserErrorCode;
-import com.farm2pot.common.service.CommonService;
+import com.farm2pot.utils.UserConstants;
+import com.farm2pot.utils.exception.UserErrorCode;
+import com.farm2pot.utils.UserUtils;
 import com.farm2pot.user.controller.dto.EditUserRequest;
 import com.farm2pot.user.entity.User;
 import com.farm2pot.user.mapper.EditUserMapper;
 import com.farm2pot.user.repository.UserRepository;
-import com.farm2pot.user.service.dto.UserPasswordCheckDto;
+import com.farm2pot.user.service.dto.CheckUserPassword;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
-import static com.farm2pot.common.exception.UserErrorCode.INVALID_PASASWORD;
-import static com.farm2pot.common.exception.UserErrorCode.USER_NOT_FOUND;
+import static com.farm2pot.utils.exception.UserErrorCode.INVALID_PASASWORD;
+import static com.farm2pot.utils.exception.UserErrorCode.USER_NOT_FOUND;
 
 /**
  * packageName    : com.farm2pot.user.service
@@ -32,7 +33,7 @@ import static com.farm2pot.common.exception.UserErrorCode.USER_NOT_FOUND;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final CommonService commonService;
+    private final UserUtils userUtils;
     private final RefreshTokenRepository refreshTokenRepository;
     private final EditUserMapper editUserMapper;
 
@@ -76,9 +77,9 @@ public class UserService {
 
         EditUserRequest updateUserInfo = editUserRequest;
         if(!StringUtils.isEmpty(password)){
-            if(commonService.matches(password, user.getPassword())){
+            if(userUtils.matches(password, user.getPassword())){
                 updateUserInfo = editUserRequest.toBuilder()
-                        .password(commonService.encodePassword(password))
+                        .password(userUtils.encodePassword(password))
                         .build();
             }
         }
@@ -104,19 +105,28 @@ public class UserService {
      * 패스워드 체크
      */
     public boolean validatePassword(String oldPassword, String newPassword ) {
-        return Optional.of(commonService.matches(newPassword, oldPassword))
+        return Optional.of(userUtils.matches(newPassword, oldPassword))
                 .filter(result -> result) // true일 때만 통과
                 .orElseThrow(() -> new BaseException(INVALID_PASASWORD));
     }
 
     /**
      * 사용자 패스워드 체크
-     * @param userPasswordCheckDto
+     * @param checkUserPassword
      * @return
      */
-    public boolean checkUser(UserPasswordCheckDto userPasswordCheckDto) {
-        User user = userRepository.findById(userPasswordCheckDto.id()).orElseThrow(() -> new BaseException(UserErrorCode.UNAUTHORIZED_USER));
-        return validatePassword(user.getPassword(), userPasswordCheckDto.password());
+    public boolean checkUser(CheckUserPassword checkUserPassword) {
+        User user = userRepository.findById(checkUserPassword.id()).orElseThrow(() -> new BaseException(UserErrorCode.INVALID_PASASWORD));
+        return validatePassword(user.getPassword(), checkUserPassword.password());
+    }
+
+    /**
+     * 사용자 계정 탈퇴 시 status 값을 2로 변경
+     * @param userId
+     */
+    public void deactivateUser(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(UserErrorCode.USER_NOT_FOUND));
+        user.toBuilder().status(UserConstants.USER_STATUS_2.asInt()).build();
     }
 }
 

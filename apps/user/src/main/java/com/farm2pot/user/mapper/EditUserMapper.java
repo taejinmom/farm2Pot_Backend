@@ -1,5 +1,6 @@
 package com.farm2pot.user.mapper;
 
+import com.farm2pot.auth.controller.dto.CreateUserRequest;
 import com.farm2pot.common.config.MapStructConfig;
 import com.farm2pot.common.mapper.BaseMapper;
 import com.farm2pot.user.controller.dto.EditUserRequest;
@@ -20,14 +21,13 @@ public interface EditUserMapper extends BaseMapper<User, EditUserRequest> {
 
     @Override
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "roles", ignore = true)
     void updateEntityFromDto(EditUserRequest dto, @MappingTarget User entity);
 
     @AfterMapping
-    default void afterUpdate(EditUserRequest dto, @MappingTarget User entity) {
-        if (dto.roles() != null) {
-            entity.getRoles().clear();
-            entity.getRoles().addAll(dto.roles());
+    default void afterMapping(@MappingTarget User.UserBuilder userBuilder, CreateUserRequest dto) {
+        // role 수동 매핑
+        if (dto.role() != null) {
+            userBuilder.role(dto.role());
         }
     }
 }

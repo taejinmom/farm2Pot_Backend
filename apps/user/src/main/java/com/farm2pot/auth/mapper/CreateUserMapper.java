@@ -19,14 +19,14 @@ import org.mapstruct.MappingTarget;
 public interface CreateUserMapper extends BaseMapper<User, CreateUserRequest> {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "roles", ignore = true)
     void updateEntityFromDto(CreateUserRequest dto, @MappingTarget User entity);
 
     @AfterMapping
-    default void afterUpdate(CreateUserRequest dto, @MappingTarget User entity) {
-        if (dto.roles() != null) {
-            entity.getRoles().clear();
-            entity.getRoles().addAll(dto.roles());
+    default void afterMapping(@MappingTarget User.UserBuilder userBuilder, CreateUserRequest dto) {
+        // role 수동 매핑
+        if (dto.role() != null) {
+            userBuilder.role(dto.role());
         }
     }
+
 }

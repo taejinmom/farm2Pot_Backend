@@ -1,4 +1,4 @@
-package com.farm2pot.common;
+package com.farm2pot.utils;
 
 /**
  * packageName    : com.farm2pot.common
@@ -6,13 +6,8 @@ package com.farm2pot.common;
  * date           : 2025-11-08
  * description    :
  */
-public enum CommonConstants {
+public enum UserConstants {
     /* User */
-    /* role 관련*/
-        USER_ROLE_ADMIN("ROLE_ADMIN"),
-        USER_ROLE_USER("ROLE_USER"),
-        USER_ROLE_GUEST("ROLE_GUEST"),
-
     /* 계정 활성화 여부 */
         USER_STATUS_1("1"), // 활성화
         USER_STATUS_2("2"), // 비활성화
@@ -32,7 +27,7 @@ public enum CommonConstants {
 
     private final String code;
 
-    CommonConstants(String code) {
+    UserConstants(String code) {
         this.code = code;
     }
 

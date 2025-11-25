@@ -1,10 +1,8 @@
 package com.farm2pot.auth.controller.dto;
 
 import com.farm2pot.address.controller.dto.AddressData;
+import com.farm2pot.user.entity.Role;
 import lombok.Builder;
-
-import java.util.Date;
-import java.util.List;
 
 @Builder(toBuilder = true)
 public record CreateUserRequest (
@@ -13,12 +11,7 @@ public record CreateUserRequest (
         String password,
         String email,
         String name,
-        String loginType,
-        String phoneNo,
-        Date birthDay,
         int status,
-        String gender,
-        String nickName,
-        List<String> roles,
+        Role role,
         AddressData address // 기본 배송지
 ){}

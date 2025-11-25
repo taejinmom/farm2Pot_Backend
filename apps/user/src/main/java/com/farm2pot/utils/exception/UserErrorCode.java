@@ -1,5 +1,6 @@
-package com.farm2pot.common.exception;
+package com.farm2pot.utils.exception;
 
+import com.farm2pot.common.exception.BaseErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ public enum UserErrorCode implements BaseErrorCode {
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH_003", "유효하지 않은 토큰입니다."),
     UNAUTHORIZED_USER(HttpStatus.FORBIDDEN, "AUTH_004", "접근 권한이 없습니다."),
     LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED, "AUTH_005", "로그인이 필요합니다."),
+    NULL_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH_006", "토큰이 없습니다."),
 
     /* 회원가입 관련 */
     DUPLICATE_LOGIN_ID(HttpStatus.CONFLICT, "USER_001", "이미 사용 중인 아이디입니다."),

@@ -14,7 +14,7 @@ import com.farm2pot.auth.mapper.RefreshTokenMapper;
 import com.farm2pot.auth.repository.RefreshTokenRepository;
 import com.farm2pot.auth.service.dto.LoginTokenResponse;
 import com.farm2pot.common.exception.BaseException;
-import com.farm2pot.common.exception.UserErrorCode;
+import com.farm2pot.utils.exception.UserErrorCode;
 import com.farm2pot.security.service.JwtProvider;
 import com.farm2pot.user.controller.dto.UserResponse;
 import com.farm2pot.user.entity.User;
@@ -30,8 +30,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
-import static com.farm2pot.common.exception.UserErrorCode.INTERNAL_SERVER_ERROR;
-import static com.farm2pot.common.exception.UserErrorCode.USER_NOT_FOUND;
+import static com.farm2pot.utils.exception.UserErrorCode.INTERNAL_SERVER_ERROR;
+import static com.farm2pot.utils.exception.UserErrorCode.USER_NOT_FOUND;
 
 /**
  * packageName    : com.farm2pot.auth.service
@@ -75,7 +75,7 @@ public class AuthService {
                 .orElseThrow(() -> new BaseException(USER_NOT_FOUND));
 
         // 4. 새 Access Token 발급
-        String newAccessToken = jwtProvider.generateAccessToken(user.getId(), user.getRoles());
+        String newAccessToken = jwtProvider.generateAccessToken(user.getId(), user.getRole().name());
 
         return new LoginTokenResponse(user.getId(), newAccessToken, request.token());
     }
@@ -95,7 +95,7 @@ public class AuthService {
         }
 
         // 3. Access Token & Refresh Token 발급
-        String accessToken = jwtProvider.generateAccessToken(user.getId(), user.getRoles());
+        String accessToken = jwtProvider.generateAccessToken(user.getId(), user.getRole().name());
         String refreshToken = jwtProvider.generateRefreshToken(user.getId());
 
         // 4. 기존 Refresh Token 삭제 (중복 방지)
@@ -131,7 +131,7 @@ public class AuthService {
         userRepository.save(user);
 
         //2. 주소정보 Insert
-        addressRepository.save(userAddressMapper.toEntity(getUserAddress(createUserRequest, user)));
+        addressRepository.save(userAddressMapper.toEntity(setUserAddress(createUserRequest, user)));
     }
 
     // 전체 사용자 조회
@@ -139,30 +139,13 @@ public class AuthService {
         return Optional.of(userRepository.findAll()).orElseThrow(() -> new BaseException(INTERNAL_SERVER_ERROR));
     }
 
-    public void init() {
-        UserResponse dto = UserResponse.builder()
-                .loginId("xclick")
-                .email("taejin1@example.com")
-                .password(passwordEncoder.encode("a"))
-                .name("김태진")
-                .loginType("LOCAL")
-                .phoneNo("010-1234-5678")
-                .status(1)
-                .gender("M")
-                .nickName("농부태진")
-                .roles(List.of("ROLE_USER","ROLE_ADMIN"))
-                .build();
-
-        User entity = userMapper.toEntity(dto);
-        userRepository.save(entity);
-    }
 
     /**
      * 회원가입 시 입력한 주소정보를 default로 처리
      * @param createUserRequest
      * @return
      */
-    public AddressData getUserAddress(CreateUserRequest createUserRequest, User user) {
+    public AddressData setUserAddress(CreateUserRequest createUserRequest, User user) {
         AddressData addressData = createUserRequest.address();
         return addressData.toBuilder()
                 .isDefault(true)
@@ -170,8 +153,4 @@ public class AuthService {
                 .build();
     }
 
-//    @PostConstruct
-    public void initInsertData() {
-        init();
-    }
 }

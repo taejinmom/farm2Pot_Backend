@@ -7,7 +7,7 @@ import com.farm2pot.address.mapper.DefaultAddressMapper;
 import com.farm2pot.address.repository.AddressRepository;
 import com.farm2pot.address.service.dto.DefaultAddressResponse;
 import com.farm2pot.common.exception.BaseException;
-import com.farm2pot.common.exception.UserErrorCode;
+import com.farm2pot.utils.exception.UserErrorCode;
 import com.farm2pot.user.entity.User;
 import com.farm2pot.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class AddressService {
      * @return
      */
     public Address findUserAddressById(Long id) {
-        return addressRepository.findById(id).orElseThrow(() -> new BaseException(UserErrorCode.ADDRESS_NOT_FOUND));
+        return addressRepository.findById(id).orElseThrow(() -> new BaseException(UserErrorCode.NOT_FOUND_ADDRESS));
     }
 
     /**
@@ -49,7 +49,7 @@ public class AddressService {
      * @return
      */
     public List<Address> findAllAddressByUserId(Long userId) {
-        return addressRepository.findAllAddressByUserId(userId).orElseThrow(() -> new BaseException(UserErrorCode.ADDRESS_NOT_FOUND));
+        return addressRepository.findAllAddressByUserId(userId).orElseThrow(() -> new BaseException(UserErrorCode.NOT_FOUND_ADDRESS));
     }
 
 
@@ -79,7 +79,7 @@ public class AddressService {
     @Transactional
     public Address editUserAddress(Long addrId, AddressData addressData) {
         Address address = addressRepository.findById(addrId)
-                .orElseThrow(() -> new BaseException(UserErrorCode.ADDRESS_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(UserErrorCode.NOT_FOUND_ADDRESS));
 
         addressMapper.updateEntityFromDto(addressData, address);
         return address;
@@ -107,7 +107,7 @@ public class AddressService {
      */
     public DefaultAddressResponse findByUserIdAndIsDefaultTrue(Long userId) {
         Address address = addressRepository.findByUserIdAndIsDefaultTrue(userId)
-                .orElseThrow(()-> new BaseException(UserErrorCode.ADDRESSS_NOT_FOUND_DEFAULT));
+                .orElseThrow(()-> new BaseException(UserErrorCode.NOT_FOUND_ADDRESS));
 
         return defaultAddressMapper.toDto(address);
 

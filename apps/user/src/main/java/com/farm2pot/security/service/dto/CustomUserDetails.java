@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * packageName    : com.farm2pot.auth.dto
@@ -28,9 +27,7 @@ public class CustomUserDetails implements UserDetails {
         this.loginId = user.getLoginId();
         this.password = user.getPassword();
         this.status = user.getStatus();
-        this.authorities = user.getRoles().stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        this.authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.farm2pot.security.service;
 
 import com.farm2pot.common.exception.BaseException;
-import com.farm2pot.common.exception.UserErrorCode;
+import com.farm2pot.utils.exception.UserErrorCode;
 import com.farm2pot.security.config.SecurityProperties;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -39,13 +39,13 @@ public class JwtProvider {
     /**
      * Access Token 발급
      */
-    public String generateAccessToken(Long id, List<String> roles) {
+    public String generateAccessToken(Long id, String role) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + securityProperties.getRefreshExpiration());
 
         return Jwts.builder()
                 .subject(id.toString())
-                .claim("roles", roles)
+                .claim("role", role)
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(key)

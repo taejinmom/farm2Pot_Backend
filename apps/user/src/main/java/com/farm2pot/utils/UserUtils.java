@@ -1,4 +1,4 @@
-package com.farm2pot.common.service;
+package com.farm2pot.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CommonService {
+public class UserUtils {
     private final PasswordEncoder passwordEncoder;
 
     public String encodePassword (String password) {
